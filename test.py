@@ -1,18 +1,31 @@
 import numpy as np
+import networkx as nx
 from graph_tool.generation import complete_graph
 from _core import build_graph, optimal_branching
 
 
-def make_graph():
-    g = complete_graph(1000, directed=True)
-    weights = np.abs(np.random.rand(g.num_edges()))
-    return g, weights
+def make_graph(graph_type='graph_tool'):
+
+    n = 1000
+    if graph_type == 'graph_tool':
+        g = complete_graph(n, directed=True)
+        weights = np.abs(np.random.rand(g.num_edges()))
+        return g, weights
+    elif graph_type == 'networkx':
+        g = nx.complete_graph(n, create_using=nx.DiGraph())
+        weights = np.abs(np.random.rand(g.number_of_edges()))
+        for k, (i, j) in enumerate(g.edges_iter()):
+            g[i][j]['weight'] = weights[k]
+        return g
 
 @profile
 def test_cpp():
-    g, weights = make_graph()
-    edge_and_weights = [(int(e.source()), int(e.target()), w)
-                        for e, w in zip(g.edges(), weights)]
+    g, weights = make_graph('graph_tool')
+    # slower
+    # edge_and_weights = [(int(e.source()), int(e.target()), w)
+    #                     for e, w in zip(g.edges(), weights)]
+    edge_and_weights = [(e[0], e[1], w)
+                        for e, w in zip(g.get_edges(), weights)]
 
     g = build_graph(g.num_vertices(), edge_and_weights)
     # print('edges with weights')
@@ -21,9 +34,12 @@ def test_cpp():
     # print('optimal branching')
     optimal_branching(g)
 
-
+@profile
 def test_networkx():
-    pass
+    g = make_graph('networkx')
+    nx.maximum_spanning_arborescence(g, attr='weight', default=1)
+
 
 if __name__ == '__main__':
-    test_cpp()
+    # test_cpp()
+    test_networkx()

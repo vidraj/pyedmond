@@ -57,13 +57,17 @@ std::string graph_to_string(Graph &g){
 }
 
 
-boost::python::list optimal_branching(Graph & g){
+boost::python::list optimal_branching(Graph & g, boost::python::list roots){
   boost::property_map<Graph, boost::edge_weight_t>::type weights =
     get(boost::edge_weight_t(), g);
   boost::property_map<Graph, boost::vertex_index_t>::type vertex_indices =
       get(boost::vertex_index_t(), g);
   
   std::vector<Edge> branching;
+  
+  // bool TOptimumIsMaximum,
+  // bool TAttemptToSpan,
+  // bool TGraphIsDense
   edmonds_optimum_branching<true, false, false>(g,
 						vertex_indices,
 						weights,
