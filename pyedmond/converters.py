@@ -1,5 +1,5 @@
 import networkx as nx
-from _core import build_graph
+from ._core import build_graph
 
 
 def gt2edges_and_weights(g, weights):

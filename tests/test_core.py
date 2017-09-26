@@ -3,8 +3,9 @@ import numpy as np
 import networkx as nx
 from graph_tool.all import Graph, GraphView, complete_graph, label_components, random_spanning_tree
 
-from _core import minimum_branching
-from converters import gt2edges_and_weights, nx2edges_and_weights, from_gt
+from pyedmond._core import minimum_branching
+from pyedmond.converters import gt2edges_and_weights, nx2edges_and_weights, from_gt
+from pyedmond.core import find_minimum_branching
 
 
 @pytest.fixture
@@ -97,3 +98,11 @@ def test_optimilaity(g, weights):
         tree_map = random_spanning_tree(g)
         t = GraphView(g, efilt=tree_map, directed=True)
         assert graph_weight(t) >= min_weight
+
+
+def test_find_minimum_branching(g, weights):
+    edges = find_minimum_branching(g, weights=weights)
+    
+    tree = Graph(directed=True)
+    tree.add_edge_list(edges)
+    assert is_arborescence(tree)
