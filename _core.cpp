@@ -57,7 +57,15 @@ std::string graph_to_string(Graph &g){
 }
 
 
-boost::python::list optimal_branching(Graph & g){
+boost::python::list minimum_branching(Graph & g, boost::python::list roots){
+  // copying the roots
+  std::vector<Vertex> roots_iter;
+  long length = len(roots);
+  for(long i=0; i<length; i++){
+    int node_id = boost::python::extract<int>(roots[i]);
+    roots_iter.push_back((Vertex)node_id);
+  }
+    
   boost::property_map<Graph, boost::edge_weight_t>::type weights =
     get(boost::edge_weight_t(), g);
   boost::property_map<Graph, boost::vertex_index_t>::type vertex_indices =
@@ -68,12 +76,12 @@ boost::python::list optimal_branching(Graph & g){
   // bool TOptimumIsMaximum,
   // bool TAttemptToSpan,
   // bool TGraphIsDense
-  edmonds_optimum_branching<true, false, false>(g,
-						vertex_indices,
-						weights,
-						static_cast<Vertex *>(0),
-						static_cast<Vertex *>(0),
-						std::back_inserter(branching));
+  edmonds_optimum_branching<false, true, true>(g,
+					       vertex_indices,
+					       weights,
+					       roots_iter.begin(),
+					       roots_iter.end(),
+					       std::back_inserter(branching));
   boost::python::list l;
   BOOST_FOREACH(Edge e, branching){
     int source = (int)boost::source(e, g);
@@ -90,7 +98,7 @@ BOOST_PYTHON_MODULE(_core) {
   class_<Graph>("Graph");
   def("build_graph", build_graph);
   def("graph_to_string", graph_to_string);
-  def("optimal_branching", optimal_branching);
+  def("minimum_branching", minimum_branching);
 };
 
 
