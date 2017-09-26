@@ -1,12 +1,11 @@
+import time
 import numpy as np
 import networkx as nx
 from graph_tool.generation import complete_graph
-from _core import build_graph, minimum_branching
+from pyedmond._core import build_graph, minimum_branching
 
 
-def make_graph(graph_type='graph_tool'):
-
-    n = 10
+def make_graph(n=100, graph_type='graph_tool'):
     if graph_type == 'graph_tool':
         g = complete_graph(n, directed=True)
         weights = np.abs(np.random.rand(g.num_edges()))
@@ -18,29 +17,38 @@ def make_graph(graph_type='graph_tool'):
             g[i][j]['weight'] = weights[k]
         return g
 
-# @profile
-def test_cpp():
-    g, weights = make_graph('graph_tool')
-    # slower
-    # edge_and_weights = [(int(e.source()), int(e.target()), w)
-    #                     for e, w in zip(g.edges(), weights)]
+
+def test_pyedmond(n):
+    """return the number of seconds required to run the algorithm
+    """
+    g, weights = make_graph(n, 'graph_tool')
     edge_and_weights = [(e[0], e[1], w)
                         for e, w in zip(g.get_edges(), weights)]
 
     g = build_graph(g.num_vertices(), edge_and_weights)
-    # print('edges with weights')
-    # print(graph_to_string(g))
 
-    # print('optimal branching')
-    tree_edges = minimum_branching(g, [0])
-    print(tree_edges)
+    s = time.time()
+    minimum_branching(g, [])
+    return time.time() - s
 
-# @profile
-def test_networkx():
-    g = make_graph('networkx')
+
+def test_networkx(n):
+    """return the number of seconds required to run the algorithm
+    """    
+    g = make_graph(n, 'networkx')
+
+    s = time.time()
     nx.maximum_spanning_arborescence(g, attr='weight', default=1)
-
+    return time.time() - s
 
 if __name__ == '__main__':
-    test_cpp()
-    # test_networkx()
+    n = 100
+    r = 5
+    pyedmond_time = np.mean([test_pyedmond(n) for i in range(r)])
+    networkx_time = np.mean([test_networkx(n) for i in range(r)])
+
+    print('#nodes: {}'.format(n))
+    print('repetition: {}'.format(5))
+    print('pyedmond takes {} secs on average'.format(pyedmond_time))
+    print('networkx takes {} secs on average'.format(networkx_time))
+    print('pyedmond is {} times faster'.format(networkx_time / pyedmond_time))
