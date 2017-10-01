@@ -13,6 +13,10 @@ def gt2edges_and_weights(g, weights):
     
     list of (source, target, weight)
     """
+    from graph_tool import PropertyMap
+    if isinstance(weights, PropertyMap):  # convert to np.ndarray if necessary
+        weights = weights.a
+
     assert g.num_edges() == len(weights)
     assert g.is_directed()
 

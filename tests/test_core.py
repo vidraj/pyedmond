@@ -28,7 +28,7 @@ def test_graphtool():
     weight[g.edge(2, 3)] = 3
     weight[g.edge(3, 0)] = 4
     
-    assert set(gt2edges_and_weights(g, weight.a)) == {
+    assert set(gt2edges_and_weights(g, weight)) == {
         (0, 1, 1), (1, 2, 2), (2, 3, 3), (3, 0, 4)
     }
 
