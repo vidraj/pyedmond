@@ -5,14 +5,19 @@ from .converters import from_gt, from_nx
 
 def find_minimum_branching(g, roots=[], **kwargs):
     """
-    args:
+    Args:
+    -----------
     
     g: graph_tool.Graph or networkx.DiGraph
-    roots: list of roots to consider
-    kwargs: either `weights` (for graph_tool) or `weight` (for networkx)
-    if weights, it's numpy.ndarray or list where each entry corresponds to one edge of g
 
-    returns:
+    roots: list of roots to consider
+
+    kwargs: either `weights` (for graph_tool) or `weight` (for networkx)
+
+    if `weights`, it's numpy.ndarray or list where each entry corresponds to one edge of g
+
+    Returns:
+    ------------
 
     a list of edges, (int, int)
     """

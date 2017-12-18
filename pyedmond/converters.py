@@ -41,10 +41,14 @@ def nx2edges_and_weights(g, weight='weight'):
 
 
 def from_gt(g, weights):
+    """weights: edge weights, PropertyMap or np.ndarray
+    """
     return build_graph(g.num_vertices(),
                        gt2edges_and_weights(g, weights))
 
 
 def from_nx(g, weight='weight'):
+    """weight: key of weight
+    """
     return build_graph(g.number_of_nodes(),
                        nx2edges_and_weights(g, weight))
