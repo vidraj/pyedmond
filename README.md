@@ -6,7 +6,7 @@ As it's in C++ internally, it's faster and more memory-efficient than [networkx.
 
 # Example usage
 
-
+```python
     import numpy as np
     import networkx as nx
     from pyedmond import find_minimum_branching
@@ -17,7 +17,7 @@ As it's in C++ internally, it's faster and more memory-efficient than [networkx.
         g[i][j]['weight'] = weights[k]
     
     edges = find_minimum_branching(g, roots=[0, 1])  # returns a list of (int, int) edges
-
+```
 
 # Installation
 
