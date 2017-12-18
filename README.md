@@ -7,16 +7,16 @@ As it's in C++ internally, it's faster and more memory-efficient than [networkx.
 # Example usage
 
 ```python
-    import numpy as np
-    import networkx as nx
-    from pyedmond import find_minimum_branching
-    
-    g = nx.complete_graph(10, create_using=nx.DiGraph())
-    weights = np.abs(np.random.rand(g.number_of_edges()))
-    for k, (i, j) in enumerate(g.edges_iter()):
-        g[i][j]['weight'] = weights[k]
-    
-    edges = find_minimum_branching(g, roots=[0, 1])  # returns a list of (int, int) edges
+import numpy as np
+import networkx as nx
+from pyedmond import find_minimum_branching
+
+g = nx.complete_graph(10, create_using=nx.DiGraph())
+weights = np.abs(np.random.rand(g.number_of_edges()))
+for k, (i, j) in enumerate(g.edges_iter()):
+    g[i][j]['weight'] = weights[k]
+
+edges = find_minimum_branching(g, roots=[0, 1])  # returns a list of (int, int) edges
 ```
 
 # Installation
