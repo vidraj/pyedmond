@@ -25,7 +25,7 @@ edges = find_minimum_branching(g, roots=[0, 1])  # returns a list of (int, int) 
 
 # Test
 
-   python3 setup.py test
+    python3 setup.py test
 
 # notes on code
 
